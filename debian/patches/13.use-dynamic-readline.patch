@@ -1,0 +1,46 @@
+Slind local - Use system readline to build.
+
+It would be nice to add a configure argument for this upstream.
+
+---
+ gdb/Makefile.in |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+Index: gdb-6.6.dfsg/gdb/Makefile.in
+===================================================================
+--- gdb-6.6.dfsg.orig/gdb/Makefile.in	2007-01-27 20:35:20.000000000 -0500
++++ gdb-6.6.dfsg/gdb/Makefile.in	2007-01-27 20:35:29.000000000 -0500
+@@ -123,10 +123,20 @@
+ BFD_CFLAGS = -I$(BFD_DIR) -I$(BFD_SRC)
+ 
+ # Where is the READLINE library?  Typically in ../readline.
+-READLINE_DIR = ../readline
+-READLINE = $(READLINE_DIR)/libreadline.a
+-READLINE_SRC = $(srcdir)/$(READLINE_DIR)
+-READLINE_CFLAGS = -I$(READLINE_SRC)/..
++#READLINE_DIR = ../readline
++#READLINE = $(READLINE_DIR)/libreadline.a
++#READLINE_SRC = $(srcdir)/$(READLINE_DIR)
++#READLINE_CFLAGS = -I$(READLINE_SRC)/..
++#
++# Slind has the best readline installed in an appropriate place - use it.
++ifeq ($(host_alias),$(target_alias))
++READLINE_SRC=/usr/$(target_alias)/include/readline
++else
++READLINE_SRC=/usr/include/readline
++endif
++READLINE=-lreadline
++READLINE_CFLAGS=
++READLINE_DIR=
+ 
+ # Where is expat?  This will be empty if expat was not available.
+ LIBEXPAT = @LIBEXPAT@
+@@ -384,7 +390,7 @@
+ 	$(XM_CLIBS) $(TM_CLIBS) $(NAT_CLIBS) $(GDBTKLIBS) @LIBS@ \
+ 	$(LIBICONV) $(LIBEXPAT) \
+ 	$(LIBIBERTY) $(WIN32LIBS)
+-CDEPS = $(XM_CDEPS) $(TM_CDEPS) $(NAT_CDEPS) $(SIM) $(BFD) $(READLINE) \
++CDEPS = $(XM_CDEPS) $(TM_CDEPS) $(NAT_CDEPS) $(SIM) $(BFD) \
+ 	$(OPCODES) $(INTL_DEPS) $(LIBIBERTY) $(CONFIG_DEPS)
+ 
+ ADD_FILES = $(XM_ADD_FILES) $(TM_ADD_FILES) $(NAT_ADD_FILES)

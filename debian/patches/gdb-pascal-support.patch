@@ -1,0 +1,25 @@
+Originally from:
+  http://www.math.uni.wroc.pl/~hebisch/gpc/
+
+I believe this patch was posted to gdb-patches and never reviewed.
+But M2 support added set types just before GDB 6.5, and now there's
+not much left of this.
+
+---
+ gdb/dwarf2read.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+Index: gdb-6.8.50.20090628/gdb/dwarf2read.c
+===================================================================
+--- gdb-6.8.50.20090628.orig/gdb/dwarf2read.c	2009-07-03 18:26:34.000000000 -0400
++++ gdb-6.8.50.20090628/gdb/dwarf2read.c	2009-07-03 18:45:06.000000000 -0400
+@@ -8309,7 +8309,8 @@ determine_prefix (struct die_info *die, 
+   struct type *parent_type;
+ 
+   if (cu->language != language_cplus
+-      && cu->language != language_java)
++      && cu->language != language_java
++      && cu->language != language_pascal)
+     return "";
+ 
+   /* We have to be careful in the presence of DW_AT_specification.

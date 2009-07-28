@@ -1,0 +1,39 @@
+Source: gdb
+Maintainer: Mikhail Gusarov <dottedmag@dottedmag.net>
+Section: core
+Priority: optional
+Standards-Version: 3.8.1
+# Build-Depends: autoconf, libtool, libncurses5-dev, libreadline5-dev, bison, gettext, debhelper (>= 7), dejagnu, quilt (>= 0.30), type-handling (>= 0.2.1), flex | flex-old, libexpat1-dev, python-dev, zlib1g-dev, procps
+XCS-Cross-Host-Build-Depends: autoconf, libtool, bison, texinfo, debhelper (>= 7), quilt (>= 0.30), flex
+XCS-Cross-Build-Depends: libncurses5-dev, libz1-dev
+Build-Depends: autoconf, libtool, bison, texinfo, debhelper (>= 7), quilt (>= 0.30), flex, libncurses5-dev, libz1-dev
+
+Package: gdb
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: The GNU Debugger
+ GDB is a source-level debugger, capable of breaking programs at
+ any specific line, displaying variable values, and determining
+ where errors occurred.
+
+Package: gdbtui
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ncurses-base
+Description: The GNU Debugger
+ GDB is a source-level debugger, capable of breaking programs at
+ any specific line, displaying variable values, and determining
+ where errors occurred.
+ .
+ This package contains gdbtui binary, providing ncurses interface
+ for gdb.
+
+Package: gdbserver
+Architecture: any
+Depends: ${shlib:Depends}, ${misc:Depends}
+Description: The GNU Debugger -- server package
+ GDB is a source-level debugger, capable of breaking programs at
+ any specific line, displaying variable values, and determining
+ where errors occurred.
+ .
+ This package contains gdbserver binary for target machines
+ facilitating remote debugging by using full debuger on host machine.

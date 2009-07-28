@@ -1,0 +1,71 @@
+#!/usr/bin/make -f
+
+include /usr/share/quilt/quilt.make
+
+DEB_HOST_GNU_TYPE := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_BUILD_GNU_TYPE := $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+CONFARGS = \
+	--host=$(DEB_HOST_GNU_TYPE) \
+	--build=$(DEB_BUILD_GNU_TYPE) \
+	--prefix=/usr \
+	--without-uiout \
+	--enable-tui \
+	--disable-gdbtk \
+	--without-x \
+	--without-included-gettext \
+	--disable-nls \
+    --disable-rpath
+
+DEB_SRCDIR=$(shell pwd)
+DEB_BUILDDIR=$(shell pwd)/build-gdb
+
+clean: unpatch
+	dh_testdir
+	dh_testroot
+
+	rm -rf $(DEB_BUILDDIR)
+
+	dh_clean
+
+unpack:
+	mkdir -p $(DEB_BUILDDIR)
+
+configure: unpack patch
+	dh_testdir
+
+	cd $(DEB_BUILDDIR) && $(DEB_SRCDIR)/configure $(CONFARGS)
+
+build: configure
+	dh_testdir
+
+	cd $(DEB_BUILDDIR) && make
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+
+	$(MAKE) -C $(DEB_BUILDDIR) install DESTDIR=$(DEB_SRCDIR)/debian/tmp
+	dh_install
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+
+	DPKGCROSSARCH=$(DEB_HOST_ARCH) dh_shlibdeps
+	DEB_HOST_ARCH=$(DEB_HOST_ARCH) dh_gencontrol
+
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
